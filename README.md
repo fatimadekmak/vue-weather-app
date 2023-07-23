@@ -8,3 +8,4 @@ Weather App built using Vue.js 2.
 5. Run your project ```npm run serve```
 6. Run the unit tests using ```npm run test:unit```
 
+Design of the app by Tyler Potts [https://youtu.be/JLc-hWsPTUY]
