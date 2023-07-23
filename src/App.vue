@@ -1,28 +1,65 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" :class="this.cold===true?'cold':'warm'">
+      <main>
+        <Header :title="title"></Header>
+        <WeatherContent v-on:changeBg="changeBg"></WeatherContent>
+      </main>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import WeatherContent from '../src/components/WeatherContent.vue'
+import Header from '../src/components/HeaderComponent.vue'
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    WeatherContent,
+    Header
+  },
+  data()
+  {
+    return {
+      cold: {
+        default: false,
+        type: Boolean
+      },
+      title: "The Weather App"
+    } 
+  },
+  methods: {
+    changeBg(isCold) {
+      this.cold = isCold
+    }
   }
+  
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  #app {
+    font-family: "montserrat",sans-serif;
+    background-size: cover;
+    background-position: bottom;
+    transition: 0.4s;
+  }
+
+  #app.cold {
+    background-image: url("../src/assets/cold-bg.jpg");
+  }
+  #app.warm {
+    background-image: url("../src/assets/bg.jpg");
+  }
+
+  main {
+    min-height: 100vh;
+    padding: 25px;
+    
+  }
+
 </style>
