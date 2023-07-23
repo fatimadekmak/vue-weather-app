@@ -1,3 +1,4 @@
+
 <template>
     <div>
         <ErrorBanner :bannerMessage="bannerMessage" @cancelMessage="cancelMessage"></ErrorBanner>
@@ -20,7 +21,7 @@ export default {
     data() {
         return {
             url_base: "https://api.openweathermap.org/data/2.5/",
-            api_key: "cbc0a1379fc8a548c259909fc8a0bf92",
+            api_key: '',
             weather: {},
             bannerMessage: '',
             query:''
@@ -34,6 +35,14 @@ export default {
         async searchCity(query) {
             this.bannerMessage = ''
             this.weather = {}
+            try {
+                this.api_key = process.env.VUE_APP_OPEN_WEATHER_API_KEY
+                console.log(this.api_key)
+            }catch {
+                this.bannerMessage = 'Error! API Key needs to be loaded to use openweathermap.org!'
+                return;
+            }
+
             await fetch(`${this.url_base}weather?q=${query}&units=metric&APPID=${this.api_key}`)
                 .then(async response => {
                     if(response.ok) {
