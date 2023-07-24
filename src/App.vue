@@ -52,6 +52,10 @@ export default {
   #app.cold {
     background-image: url("../src/assets/cold-bg.jpg");
   }
+
+  #app.cold h1 {
+    color: white;
+  }
   #app.warm {
     background-image: url("../src/assets/bg.jpg");
   }

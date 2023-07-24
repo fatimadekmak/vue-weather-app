@@ -27,6 +27,14 @@ export default {
             query:''
         }
     }, 
+    mounted() {
+        try {
+            this.api_key = process.env.VUE_APP_OPEN_WEATHER_API_KEY
+        }catch {
+            this.bannerMessage = 'Error! API Key needs to be loaded to use openweathermap.org!'
+            return;
+        }
+    },
     methods: {
         setResults(results) {
             this.weather = results
@@ -35,14 +43,7 @@ export default {
         async searchCity(query) {
             this.bannerMessage = ''
             this.weather = {}
-            try {
-                this.api_key = process.env.VUE_APP_OPEN_WEATHER_API_KEY
-                console.log(this.api_key)
-            }catch {
-                this.bannerMessage = 'Error! API Key needs to be loaded to use openweathermap.org!'
-                return;
-            }
-
+            
             await fetch(`${this.url_base}weather?q=${query}&units=metric&APPID=${this.api_key}`)
                 .then(async response => {
                     if(response.ok) {
