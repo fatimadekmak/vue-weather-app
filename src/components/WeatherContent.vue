@@ -11,6 +11,8 @@
 import SearchBar from "./SearchBar.vue";
 import Result from "./ResultComponent.vue";
 import ErrorBanner from './ErrorBanner.vue'
+import { mapActions } from 'vuex';
+
 export default {
     name: 'App',
     components: {
@@ -20,8 +22,6 @@ export default {
     },
     data() {
         return {
-            url_base: "https://api.openweathermap.org/data/2.5/",
-            api_key: '',
             weather: {},
             bannerMessage: '',
             query:''
@@ -30,30 +30,26 @@ export default {
     mounted() {
         try {
             this.api_key = process.env.VUE_APP_OPEN_WEATHER_API_KEY
+            if(this.api_key=='') throw new Error()
         }catch {
             this.bannerMessage = 'Error! API Key needs to be loaded to use openweathermap.org!'
             return;
         }
     },
     methods: {
-        setResults(results) {
-            this.weather = results
-            this.$emit('changeBg',(this.weather.main.temp < 16))
-        },
+        ...mapActions(['fetchWeatherData']),
         async searchCity(query) {
             this.bannerMessage = ''
             this.weather = {}
             
-            await fetch(`${this.url_base}weather?q=${query}&units=metric&APPID=${this.api_key}`)
-                .then(async response => {
-                    if(response.ok) {
-                        this.setResults(await response.json())
-                    }
-                    else {
-                        this.bannerMessage = "Couldn't fetch the required data"
-                    }
-                })
-
+            try {
+                await this.fetchWeatherData(query)
+                this.weather = this.$store.getters.getWeatherData
+                this.$emit('changeBg', this.weather.main.temp < 16);
+            }
+            catch(e) {
+                this.bannerMessage = "Couldn't fetch the required data"
+            }
         },
         cancelMessage() {
             this.bannerMessage = '';
